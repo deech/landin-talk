@@ -1,0 +1,196 @@
+#+TITLE: The Mechanical Evaluation Of Expressions
+#+AUTHOR: Aditya Siram (@deech)
+#+OPTIONS: H:1 toc:f
+#+LATEX_CLASS: beamer
+#+LATEX_listingsCLASS_OPTIONS: [presentation]
+#+BEAMER_THEME: Madrid
+
+* SECD - Square Root
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   sqrt = \n . n * n
+   S = []
+   E = []
+   C = [sqrt(2)]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Square Root
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   sqrt = \n . n * n
+   S = []
+   E = []
+   C = [\n . n * n, 2]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Square Root
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   sqrt = \n . n * n
+   S = []
+   E = []
+   C = [2, \n . n * n, ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Square Root
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-identifier.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   sqrt = \n . n * n
+   S = [2]
+   E = []
+   C = [\n . n * n, ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Square Root
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-lambda.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   sqrt = \n . n * n
+   S = [closure [] x [x * x], 2]
+   E = []
+   C = [ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Square Root
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-ap-closure.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   sqrt = \n . n * n
+   S = []
+   E = [[(x 2)]]
+   C = [x * x]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Square Root
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   sqrt = \n . n * n
+   S = []
+   E = [[(x 2)]]
+   C = [x x * ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Square Root
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   sqrt = \n . n * n
+   S = [[x x]]
+   E = [[(x 2)]]
+   C = [* ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Square Root
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-identifier.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   sqrt = \n . n * n
+   S = [[2 2]]
+   E = [[(x 2)]]
+   C = [* ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Square Root
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-ap-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   sqrt = \n . n * n
+   S = [4]
+   E = [[(x 2)]]
+   C = []
+   D = []
+   #+END_EXAMPLE
