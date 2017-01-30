@@ -5,6 +5,75 @@
 #+LATEX_listingsCLASS_OPTIONS: [presentation]
 #+BEAMER_THEME: Madrid
 
+* Motivation
+  - Arithmetic mechanized by a calculator
+    - only 3 years before!
+  - The computational equivalent?
+  - What's a code "calculator" look like?
+* VM/Abstract Machine
+  - Transform lambda calculus into machine with 4 registers
+  - The 1st virtual machine!
+  - The 1st bytecode!
+* Where
+ - One of the first uses of 'where'
+   file:where.png
+ - Significant indentation
+   file:indented-where.png
+* Syntactic Sugar
+ - "Syntactic sugar" invented here!
+   file:sugar.png
+* Predicates/Selectors/Constructors
+  - Given:
+    #+BEGIN_EXAMPLE
+    {\x. x + 1}
+    #+END_EXAMPLE
+  - Constructor:
+    #+ATTR_LATEX: :width 0.3\linewidth
+    file:constructlambdaexpression.png
+    #+BEGIN_EXAMPLE
+      constructlambdaexp(x, [x + 1])
+    #+END_EXAMPLE
+  - Selector:
+    #+BEGIN_EXAMPLE
+      bv(constructlambdaexp(x, [x + 1])) = x
+      body(constructlambdaexp(x, [x + 1])) = [x + 1]
+    #+END_EXAMPLE
+  - Predicate:
+    #+BEGIN_EXAMPLE
+      lambdaexp(constructlambdaexp(x, [x + 1])) = true
+    #+END_EXAMPLE
+* ADTs!
+  - Almost ADT's:
+    #+BEGIN_EXAMPLE
+      data Exp =
+          ... |
+          Lambda [String] Exp
+
+      f (Lambda args body) = ...
+    #+END_EXAMPLE
+* Closures
+  - "Closures" invented here!
+    - lambda expression + environment = closure.
+    file:closure.png
+  - Not much different from:
+    #+BEGIN_EXAMPLE
+      data Exp = ...
+         | Closure [(String, Exp)] [String] Exp
+    #+END_EXAMPLE
+* Closures
+  - Constructor, just like for lambda expressions:
+    file:constructclosure.png
+* SECD
+ - SECD - "the virtual machine", 4 linked list registers:
+   - Stack : the current stack frame
+   - Enviroment: lookup list of bound identifiers
+   - Control: the next thing to evaluate
+   - Dump: a swap space of SECD's, temporarily holds old states
+* Transform
+ - The transformation function:
+   #+ATTR_LATEX: :width 0.7\linewidth
+   file:transform.png
+ - Notice destructuring!
 * SECD - Square Root
 ** Transform
    :PROPERTIES:
@@ -17,10 +86,10 @@
    :BEAMER_col: 0.5
    :END:
    #+BEGIN_EXAMPLE
-   sqrt = \n . n * n
+   sq = \n . n * n
    S = []
    E = []
-   C = [sqrt(2)]
+   C = [sq(2)]
    D = []
    #+END_EXAMPLE
 
@@ -36,7 +105,7 @@
    :BEAMER_col: 0.5
    :END:
    #+BEGIN_EXAMPLE
-   sqrt = \n . n * n
+   sq = \n . n * n
    S = []
    E = []
    C = [\n . n * n, 2]
@@ -55,7 +124,7 @@
    :BEAMER_col: 0.5
    :END:
    #+BEGIN_EXAMPLE
-   sqrt = \n . n * n
+   sq = \n . n * n
    S = []
    E = []
    C = [2, \n . n * n, ap]
@@ -74,7 +143,7 @@
    :BEAMER_col: 0.5
    :END:
    #+BEGIN_EXAMPLE
-   sqrt = \n . n * n
+   sq = \n . n * n
    S = [2]
    E = []
    C = [\n . n * n, ap]
@@ -93,7 +162,7 @@
    :BEAMER_col: 0.5
    :END:
    #+BEGIN_EXAMPLE
-   sqrt = \n . n * n
+   sq = \n . n * n
    S = [closure [] x [x * x], 2]
    E = []
    C = [ap]
@@ -112,7 +181,7 @@
    :BEAMER_col: 0.5
    :END:
    #+BEGIN_EXAMPLE
-   sqrt = \n . n * n
+   sq = \n . n * n
    S = []
    E = [[(x 2)]]
    C = [x * x]
@@ -131,7 +200,7 @@
    :BEAMER_col: 0.5
    :END:
    #+BEGIN_EXAMPLE
-   sqrt = \n . n * n
+   sq = \n . n * n
    S = []
    E = [[(x 2)]]
    C = [x x * ap]
@@ -150,7 +219,7 @@
    :BEAMER_col: 0.5
    :END:
    #+BEGIN_EXAMPLE
-   sqrt = \n . n * n
+   sq = \n . n * n
    S = [[x x]]
    E = [[(x 2)]]
    C = [* ap]
@@ -169,7 +238,7 @@
    :BEAMER_col: 0.5
    :END:
    #+BEGIN_EXAMPLE
-   sqrt = \n . n * n
+   sq = \n . n * n
    S = [[2 2]]
    E = [[(x 2)]]
    C = [* ap]
@@ -188,9 +257,347 @@
    :BEAMER_col: 0.5
    :END:
    #+BEGIN_EXAMPLE
-   sqrt = \n . n * n
+   sq = \n . n * n
    S = [4]
    E = [[(x 2)]]
    C = []
    D = []
    #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = []
+   E = []
+   C = [inc(double(2))]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = []
+   E = []
+   C = [double(2) inc ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = []
+   E = []
+   C = [2 double ap inc ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = [2]
+   E = []
+   C = [double ap inc ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-identifier.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = [2]
+   E = []
+   C = [(\x. x * 2) ap inc ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-lambda.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = [[closure [] x [x * 2] 2]
+   E = []
+   C = [ap inc ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-ap-closure.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = []
+   E = [[x 2]]
+   C = [[x * 2] inc ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = []
+   E = [[x 2]]
+   C = [x 2 * ap inc ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-identifier.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = [2]
+   E = [[x 2]]
+   C = [2 * ap inc ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-ap-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = [4]
+   E = [[x 2]]
+   C = [inc ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = [4]
+   E = [[x 2]]
+   C = [(\x. x + 1) ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-lambda.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = [[closure [x 2] x [x + 1]] 4]]
+   E = [[x 2]]
+   C = [ap]
+   D = []
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-ap-closure.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = []
+   E = [[x 4] [x 2]]
+   C = [x + 1]
+   D = [[] [x 2] [] []]
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = []
+   E = [[x 4] [x 2]]
+   C = [1 x + ap]
+   D = [[] [x 2] [] []]
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-identifier.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = [+ 4 1]
+   E = [[x 4] [x 2]]
+   C = [ap]
+   D = [[] [x 2] [] []]
+   #+END_EXAMPLE
+
+* SECD - Compose
+** Transform
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   file:transform-ap-else.png
+
+** SECD
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   #+BEGIN_EXAMPLE
+   inc = \x. x + 1
+   double = \x. x * 2
+   S = [5]
+   E = [[x 4] [x 2]]
+   C = []
+   D = [[] [x 2] [] []]
+   #+END_EXAMPLE
+* Offhand mentions
+  - Just some casual suggestions
+    - Decades of PhDs!
+* Offhand mentions
+  - Non-strict evaluation!
+    file:lazy.png
+* Offhand mentions
+  - Partial evaluation
+    file:partial-evaluation.png
+* Offhand mentions
+  - Inlining
+    file:inlining.png
+* Offhand mentions
+  - DSLs
+    file:dsl.png
+* Thanks!
+  - "The Mechanical Evaluation Of Expressions"
+    https://www.cs.cmu.edu/afs/cs/user/crary/www/819-f09/Landin64.pdf
